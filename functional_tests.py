@@ -48,6 +48,7 @@ class NewVisitorTest(unittest.TestCase):
 		# --ok
 
         # At the end of the current date, all items not ticked off as Done, or Cancelled will be transferred to the next day
+		# --ok
 
         # Has a simple user management system,
         # where for each user the username, full name, password, and e-mail address are the only required data.

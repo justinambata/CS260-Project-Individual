@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -11,6 +12,7 @@ from todo.models import Item
 from todo.forms import ItemForm
 
 from itertools import chain
+from datetime import date
 import datetime
 
 #from django.shortcuts import render_to_response
@@ -31,7 +33,14 @@ def mainmenu(request, action=None):
         item.save()
     """
     loggedinuser = request.user.username
-    itemList = Item.objects.filter(owner=request.user.username)
+    today_min = datetime.datetime.combine(date.today(), datetime.time.min)
+    today_max = datetime.datetime.combine(date.today(), datetime.time.max)
+
+    itemListToDo = Item.objects.filter(owner=request.user.username).filter(status=0)
+    itemListSameDate = Item.objects.filter(owner=request.user.username).filter(~Q(status=0)).filter(created_date__range=(today_min, today_max))
+    itemList = list(chain(itemListToDo, itemListSameDate))
+
+    #itemList = Item.objects.filter(owner=request.user.username).filter(~Q(status=0)).filter(created_date__range=(today_min, today_max))
     return render_to_response('mainmenu.html',{'itemList':itemList,'loggedinuser':loggedinuser}, context_instance=RequestContext(request))
 
 
