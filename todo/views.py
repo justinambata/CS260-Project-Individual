@@ -13,9 +13,8 @@ from todo.forms import ItemForm
 
 from itertools import chain
 from datetime import date
+from datetime import datetime, timedelta
 import datetime
-
-#from django.shortcuts import render_to_response
 
 # Create your views here.
 @login_required
@@ -36,11 +35,12 @@ def mainmenu(request, action=None):
     today_min = datetime.datetime.combine(date.today(), datetime.time.min)
     today_max = datetime.datetime.combine(date.today(), datetime.time.max)
 
+    Item.objects.filter(owner=request.user.username).filter(created_date__lt=datetime.datetime.now()-timedelta(days=7)).delete()
+	
     itemListToDo = Item.objects.filter(owner=request.user.username).filter(status=0)
     itemListSameDate = Item.objects.filter(owner=request.user.username).filter(~Q(status=0)).filter(created_date__range=(today_min, today_max))
     itemList = list(chain(itemListToDo, itemListSameDate))
 
-    #itemList = Item.objects.filter(owner=request.user.username).filter(~Q(status=0)).filter(created_date__range=(today_min, today_max))
     return render_to_response('mainmenu.html',{'itemList':itemList,'loggedinuser':loggedinuser}, context_instance=RequestContext(request))
 
 
