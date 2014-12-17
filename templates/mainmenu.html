@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+<html>
+<head>
+    <title>{% block title %}Mainmenu | To-Do lists{% endblock %}</title>
+</head>
+<body>
+
+<div id="content">
+    {% block content %}
+	<!--
+    Mainmenu
+    <a href="/statinfo/">stat info</a>
+	-->
+	<table id="tableHeader" width="100%">
+		<tr>
+			<td align="left">
+				You are logged in as <b>{{loggedinuser}}</b>.
+			</td>
+			<td align="right">
+				Today is <b id="divCurrentDate">{% now "F d, Y" %}</b>.
+			</td>
+		</tr>
+	</table>
+	<br />
+	<br />
+	<div align="center">
+		<a href="/additem">Add To-Do Item</a>
+	</div>
+	<br />
+	<br />
+	<table id="tableToDoList" width="100%">
+		<thead>
+			<th>
+				Action
+			</th>
+			<th>
+				Description
+			</th>
+			<th>
+				Status
+			</th>
+			<th>
+				Date Created
+			</th>
+		</thead>
+	{% for i in itemList %}
+		<tr>
+			<td align="center">
+				{% if i.status == 0 %}
+					<a href="/updateitem/{{i.id}}/1">Done</a>
+					|
+					<a href="/updateitem/{{i.id}}/-1">Cancel</a>
+				{% endif %}
+			</td>
+			<td align="center">
+				{{i.description}}
+			</td>
+			<td align="center">
+				{% if i.status == -1 %}
+					Cancelled
+				{% else %}
+					{% if i.status == 1 %}
+						Done
+					{% else %}
+						To Do
+					{% endif %}
+				{% endif %}
+			</td>
+			<td align="center">
+				{{i.created_date}}
+			</td>
+		</tr>
+    {% endfor %}
+	</table>
+	
+    {% endblock %}
+</div>
+
+</body>
+</html>

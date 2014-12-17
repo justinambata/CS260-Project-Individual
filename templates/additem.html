@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+<html>
+<head>
+    <title>{% block title %}Mainmenu | To-Do lists{% endblock %}</title>
+</head>
+<body>
+
+<div id="content">
+    {% block content %}
+	<!--
+    Mainmenu
+    <a href="/statinfo/">stat info</a>
+	-->
+	<table id="tableHeader" width="100%">
+		<tr>
+			<td align="left">
+				You are logged in as <b>{{loggedinuser}}</b>.
+			</td>
+			<td align="right">
+				Today is <b id="divCurrentDate">{% now "F d, Y" %}</b>.
+			</td>
+		</tr>
+	</table>
+	<br />
+	<br />
+	<div align="center">
+		<form id="form_additem" method="post" action="/additem/">
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}
+                {{ field }}
+            {% endfor %}
+            <input type="submit" name="submit" value="Add Item" />
+        </form>
+	</div>
+	
+    {% endblock %}
+</div>
+
+</body>
+</html>
